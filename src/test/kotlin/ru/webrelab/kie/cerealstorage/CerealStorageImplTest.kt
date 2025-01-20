@@ -45,32 +45,43 @@ class CerealStorageImplTest {
             storage.getCereal(Cereal.RICE, -1f)
         }
     }
-    @Test fun `returns the amount of cereal received`() {
+    @Test
+    fun `returns the amount of cereal received`() {
         storage.addCereal(Cereal.RICE, 10f)
         assertEquals(5f, storage.getCereal(Cereal.RICE, 5f), 0.01f)
     }
-    @Test fun `returns the remainder if the container had less`() {
+    @Test
+    fun `return 0 if storage don't have this cereal type`() {
+        assertEquals(0f, storage.getCereal(Cereal.BUCKWHEAT, 4f))
+    }
+    @Test
+    fun `returns the remainder if the container had less`() {
         storage.addCereal(Cereal.RICE, 5f)
         assertEquals(5f, storage.getCereal(Cereal.RICE, 8f), 0.01f)
     }
-    @Test fun `returns true if container successfully destroyed`() {
+    @Test
+    fun `returns true if container successfully destroyed`() {
         storage.addCereal(Cereal.RICE, 5f)
         storage.getCereal(Cereal.RICE, 5f)
         assertEquals(true, storage.removeContainer(Cereal.RICE))
     }
-    @Test fun `returns false if container is not empty` () {
+    @Test
+    fun `returns false if container is not empty` () {
         storage.addCereal(Cereal.RICE, 5f)
         assertEquals(false, storage.removeContainer(Cereal.RICE))
     }
-    @Test fun `returns the amount of cereal stored in the container `() {
+    @Test
+    fun `returns the amount of cereal stored in the container `() {
         storage.addCereal(Cereal.RICE, 5f)
         assertEquals(5f, storage.getAmount(Cereal.RICE), 0.01f)
     }
-    @Test fun `returns the amount of cereal that a container can hold given its current fullness` () {
+    @Test
+    fun `returns the amount of cereal that a container can hold given its current fullness` () {
         storage.addCereal(Cereal.RICE, 8f)
         assertEquals(2f, storage.getSpace(Cereal.RICE), 0.01f)
     }
-    @Test fun `returns text representation`() {
+    @Test
+    fun `returns text representation`() {
         storage.addCereal(Cereal.RICE, 2f)
         storage.addCereal(Cereal.PEAS, 4f)
         assertEquals("Рис: 2.0, Горох: 4.0", storage.toString())

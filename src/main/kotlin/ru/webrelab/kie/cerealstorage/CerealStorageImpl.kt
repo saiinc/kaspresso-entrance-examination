@@ -56,13 +56,13 @@ class CerealStorageImpl(
         require(amount >= 0) {
             "Получение крупы не может быть отрицательным"
         }
-        if (amount > storage[cereal]!!) {
-            val cerealRest = storage[cereal]!!
+        val cerealRest = storage[cereal] ?: return 0f
+        if (amount > cerealRest) {
             storage[cereal] = 0f
             return cerealRest
         }
         else {
-            storage[cereal] = storage[cereal]!! - amount
+            storage[cereal] = cerealRest - amount
             return amount
         }
     }
@@ -78,11 +78,12 @@ class CerealStorageImpl(
     }
 
     override fun getAmount(cereal: Cereal): Float {
-        return storage[cereal]!!
+        return storage[cereal] ?: 0f
     }
 
     override fun getSpace(cereal: Cereal): Float {
-        return containerCapacity - storage[cereal]!!
+        val cerealRest = storage[cereal] ?: return 0f
+        return containerCapacity - cerealRest
     }
 
     override fun toString(): String {
