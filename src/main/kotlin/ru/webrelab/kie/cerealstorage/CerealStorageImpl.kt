@@ -1,5 +1,7 @@
 package ru.webrelab.kie.cerealstorage
 
+import java.lang.Float.min
+
 
 class CerealStorageImpl(
     override val containerCapacity: Float,
@@ -26,30 +28,13 @@ class CerealStorageImpl(
         require(amount >= 0) {
             "Дабавление крупы не может быть отрицательным"
         }
-        if (storage[cereal] == null) {
-            check(storage.keys.size < maxContainers) {
-                "Хранилище не позволяет разместить ещё один контейнер для новой крупы"
-            }
-            if (amount <= containerCapacity) {
-                storage[cereal] = amount
-                return 0f
-            }
-            else {
-                storage[cereal] = containerCapacity
-                return amount - containerCapacity
-            }
+        check(!((storage.keys.size >= maxContainers) && (storage[cereal] == null))) {
+            "Хранилище не позволяет разместить ещё один контейнер для новой крупы"
         }
-        else {
-            if (amount <= containerCapacity) {
-                storage[cereal] = storage[cereal]!! + amount
-                return 0f
-            }
-            else {
-                val cerealRest = storage[cereal]
-                storage[cereal] = amount
-                return amount - containerCapacity + cerealRest!!
-            }
-        }
+        val cerealRest = storage[cereal] ?: 0f
+        val toAddCereal = min(amount + cerealRest, containerCapacity)
+        storage[cereal] = toAddCereal
+        return amount + cerealRest - toAddCereal
     }
 
     override fun getCereal(cereal: Cereal, amount: Float): Float {
@@ -57,24 +42,13 @@ class CerealStorageImpl(
             "Получение крупы не может быть отрицательным"
         }
         val cerealRest = storage[cereal] ?: return 0f
-        if (amount > cerealRest) {
-            storage[cereal] = 0f
-            return cerealRest
-        }
-        else {
-            storage[cereal] = cerealRest - amount
-            return amount
-        }
+        val toGetCereal = min(amount, cerealRest)
+        storage[cereal] = cerealRest - toGetCereal
+        return toGetCereal
     }
 
     override fun removeContainer(cereal: Cereal): Boolean {
-        if (storage[cereal] == 0f) {
-            storage.remove(cereal)
-            return true
-        }
-        else {
-            return false
-        }
+        return storage.remove(cereal, 0f)
     }
 
     override fun getAmount(cereal: Cereal): Float {

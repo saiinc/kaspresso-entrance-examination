@@ -35,9 +35,13 @@ class CerealStorageImplTest {
         }
     }
     @Test
-    fun `return the rest of amount of a cereal if container is full`() {
+    fun `returns the rest of amount of a cereal if container is full`() {
         //storage.addCereal(Cereal.RICE, 1f)
         assertEquals(15f, storage.addCereal(Cereal.RICE, 25f), 0.01f)
+    }
+    @Test
+    fun `returns 0 if all cereal was added`() {
+        assertEquals(0f, storage.addCereal(Cereal.RICE, 9f), 0.01f)
     }
     @Test
     fun `should throw if getCereal amount is negative`() {
