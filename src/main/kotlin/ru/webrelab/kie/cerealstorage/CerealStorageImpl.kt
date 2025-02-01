@@ -61,10 +61,7 @@ class CerealStorageImpl(
     }
 
     override fun toString(): String {
-        var text = ""
-        for (container in storage) {
-            text += container.key.local + ": " + container.value.toString() + ", "
-        }
-        return text.slice(0..text.length - 3)
+        val text = (storage.map { it.key.local + ": " + it.value.toString()}).toString()
+        return text.substring(startIndex = 1, endIndex = text.length - 1)
     }
 }
